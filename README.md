@@ -1,5 +1,7 @@
 # Lavalink-Music-Discord-Bot-v13
 A Discord bot with Music through Lavalink.
+
+This Bot has Filters and Stable Music and is Discord.js v13
 # Lavalink
 
 Lavalink is a standalone audio sending node based on Lavaplayer and JDA-Audio. Allows for sending audio without it ever reaching any of your shards.
