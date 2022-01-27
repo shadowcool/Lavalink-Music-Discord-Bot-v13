@@ -1,0 +1,15 @@
+{
+    "lavalink": {
+        "host": "lavalink.eu",
+        "port": "2333",
+        "password": "Raccoon"        
+    },
+    "discordBot": {
+        "token": "OTI5OTg3NTk3Nzc2ODc1NTMw.YdvUcQ.ZtFHStep6qSt_xNXglOUHZwa7mE",
+        "prefix": "?"
+    },
+    "spotify": {
+        "clientID": "SPOTIFY_CLIENT_ID",
+        "clientSecret": "SPOTIFY_CLIENT_SECRET"
+    }
+}
