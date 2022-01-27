@@ -5,7 +5,7 @@
         "password": "Raccoon"        
     },
     "discordBot": {
-        "token": "OTI5OTg3NTk3Nzc2ODc1NTMw.YdvUcQ.ZtFHStep6qSt_xNXglOUHZwa7mE",
+        "token": "YOUR_TOKEN",
         "prefix": "?"
     },
     "spotify": {
