@@ -38,7 +38,15 @@ client.manager = new Manager({
       port: parseInt(config.lavalink.port),
       password: config.lavalink.password,
   }, ],
-
+  plugins: [
+    new filter(),
+    new Spotify({
+      clientID: config.spotify.clientID,
+      clientSecret: config.spotify.clientSecret
+    }),
+    new Apple(),
+    new Facebook(),
+  ],
   send(id, payload) {
       const guild = client.guilds.cache.get(id);
       if (guild) guild.shard.send(payload);
