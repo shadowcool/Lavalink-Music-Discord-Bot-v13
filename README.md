@@ -22,7 +22,7 @@ Also Here are the [discord.js Documentation](https://discord.js.org/#/docs/disco
 npm install
 ```
 
-**Needed Items**
+**Required Items**
 
 [Node.js](https://nodejs.org/en/)
 
