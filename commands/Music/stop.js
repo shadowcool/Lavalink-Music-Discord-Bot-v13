@@ -1,4 +1,4 @@
-const { Client, Message, MessageEmbed } = require('discord.js')
+const { Client, Message } = require('discord.js')
 
 module.exports = {
   name: "stop",
@@ -11,17 +11,12 @@ module.exports = {
   execute: async(client, msg, args) => {
       const voiceChannel = msg.member.voice.channel;
       if (!voiceChannel) return msg.channel.send(`You must be in a Voice Channel to use this command`)
-      const player = client.manager.create({
-        guild: msg.guild.id,
-        voiceChannel: msg.member.voice.channel.id,
-        textChannel: msg.channel.id,
-    });
+      const player = client.manager.players.get(msg.guild.id)
 
-    if (player.playing) {
+    if (player.isPlaying) {
       msg.channel.send(`Stopped all Songs`)
         player.destroy();
     } else {
-      const embed = new MessageEmbed()
       msg.channel.send(`No songs are Going on in the Server`)
     }
   }

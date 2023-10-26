@@ -11,18 +11,13 @@ module.exports = {
   execute: async(client, message, args) => {
     const voiceChannel = message.member.voice.channel;
     if (!voiceChannel) return message.channel.send(`You must be in a Voice Channel to use this Command.`)
-  const player = client.manager.create({
-    guild: message.guild.id,
-    voiceChannel: message.member.voice.channel.id,
-    textChannel: message.channel.id,
-});
-const queue = player.queue;
+  const player = client.manager.players.get(message.guild.id)
 const embed1 = new MessageEmbed()
 .setAuthor(`Playing in ${message.guild.name}`)
-.setColor("DARK_BLUE");
+.setColor("GREEN");
 
-if (queue.current) {
-    embed1.addField("Now Playing", `[${queue.current.title}](${queue.current.uri})`);
+if (player.currentTrack) {
+    embed1.addField("Now Playing", `[${player.currentTrack.info.title}](${player.currentTrack.info.uri})`);
 }else {
     embed1.addField("Now Playing", `No Songs are Being Played`)
 }

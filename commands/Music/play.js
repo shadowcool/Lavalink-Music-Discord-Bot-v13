@@ -12,31 +12,45 @@ module.exports = {
     const voiceChannel = message.member.voice.channel;
     const embed = new MessageEmbed()
     .setDescription(`You must be in a Voice Channel to use this Command.`)
-    .setColor("DARK_BLUE")
+    .setColor("GREEN")
     if (!voiceChannel) return message.channel.send({ embeds: [embed] })
 
-    const res = await client.manager.search(
-      message.content.slice(6),
-      message.author
-    );
+    const track = args.join(" ");
 
-    const player = client.manager.create({
-        guild: message.guild.id,
-        voiceChannel: message.member.voice.channel.id,
-        textChannel: message.channel.id,
+    if(!track) return message.reply("Please provide a track to play.")
+
+    const res = await client.manager.resolve({ query: track, source: "ytmsearch", requester: message.member });
+
+    if (res.loadType === "LOAD_FAILED") {
+      return message.reply("Failed to load track.");
+    } else if (res.loadType === "NO_MATCHES") {
+      return message.reply("No source found!");
+    }
+  
+    //create connection with discord voice channnel
+    const player = client.manager.createConnection({
+      guildId: message.guild.id,
+      voiceChannel: message.member.voice.channelId,
+      textChannel: message.channel.id,
+      deaf: true,
     });
-
-    if(player.state !== 'CONNECTED') player.connect()
-
-    player.queue.add(res.tracks[0]);
-    message.channel.send(`Added ${res.tracks[0].title} to the Queue`);
-
-    if (!player.playing && !player.paused && !player.queue.size) {
-        player.play();
+  
+    if (res.loadType === "PLAYLIST_LOADED") {
+      for (const track of res.tracks) {
+        track.info.requester = message.user;
+        player.queue.add(track);
+      }
+  
+      message.reply(
+        `${res.playlistInfo.name} has been loaded with ${res.tracks.length}`
+      );
+    } else {
+      const track = res.tracks[0];
+      track.info.requester = message.user;
+      player.queue.add(track);
+      message.reply(`Queued Track \n \`${track.info.title}\``)
     }
-
-    if (!player.playing && !player.paused && player.queue.totalSize === res.tracks.length) {
-        player.play();
-    }
+  
+    if (!player.isPlaying && player.isConnected) player.play();
   }
 }

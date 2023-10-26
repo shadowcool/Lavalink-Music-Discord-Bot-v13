@@ -11,12 +11,8 @@ module.exports = {
   execute: async(client, message, args) => {
     const voiceChannel = message.member.voice.channel;
     if (!voiceChannel) return message.channel.send(`You must be in a Voice Channel to use this Command.`)
-    const player = client.manager.create({
-        guild: message.guild.id,
-        voiceChannel: message.member.voice.channel.id,
-        textChannel: message.channel.id,
-    });
-    if (player.playing) {
+    const player = client.manager.players.get(message.guild.id)
+    if (player.isPlaying) {
         message.channel.send(`I Skipped the On Going Song`)
         player.stop()
     } else {

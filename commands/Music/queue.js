@@ -1,4 +1,4 @@
-const { Client, Message, MessageEmbed } = require('discord.js')
+const { Client, Message, MessageEmbed } = require('discord.js');
 
 module.exports = {
   name: "queue",
@@ -11,15 +11,11 @@ module.exports = {
   execute: async(client, message, args) => {
     const voiceChannel = message.member.voice.channel;
     if (!voiceChannel) return message.channel.send(`You must be in a Voice Channel to use this Command.`)
-  const player = client.manager.create({
-    guild: message.guild.id,
-    voiceChannel: message.member.voice.channel.id,
-    textChannel: message.channel.id,
-});
+  const player = client.manager.players.get(message.guild.id)
 const queue = player.queue;
 const embed1 = new MessageEmbed()
 .setAuthor(`Queue for ${message.guild.name}`)
-.setColor("DARK_BLUE");
+.setColor("GREEN");
 
 // change for the amount of tracks per page
 const multiple = 10;
@@ -30,10 +26,10 @@ const start = end - multiple;
 
 const tracks = queue.slice(start, end);
 
-if (queue.current) embed1.addField("Current", `[${queue.current.title}](${queue.current.uri})`);
+if (player.currentTrack) embed1.addField("Current", `[${player.currentTrack.info.title}](${player.currentTrack.info.uri})`);
 
 if (!tracks.length) embed1.setDescription(`No tracks in ${page > 1 ? `page ${page}` : "the queue"}.`);
-else embed1.setDescription(tracks.map((track, i) => `${start + (++i)} - [${track.title}](${track.uri})`).join("\n"));
+else embed1.setDescription(tracks.map((track, i) => `${start + (++i)} - [${track.info.title}](${track.info.uri})`).join("\n"));
 
 const maxPages = Math.ceil(queue.length / multiple);
 

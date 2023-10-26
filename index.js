@@ -1,13 +1,8 @@
-const { Client, Intents, MessageEmbed, Collection } = require('discord.js')
-const { Manager } = require('erela.js')
+const { Client, Intents, Collection } = require('discord.js')
 const config = require('./config.json')
-const filter = require('erela.js-filters')
-const Spotify = require('erela.js-spotify')
-const Facebook = require('erela.js-facebook')
-const Apple = require('erela.js-apple')
 const fs = require('fs')
-const myIntents = new Intents()
-myIntents.add(Intents.FLAGS.GUILD_PRESENCES, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES);
+const { Poru } = require("poru");
+
 const client = new Client({
     allowedMentions: {
       parse: ['users', 'roles'],
@@ -15,69 +10,57 @@ const client = new Client({
     },
     partials: ['MESSAGE', 'REACTION', 'CHANNEL'],
     intents: [
-      "GUILDS",
-      "GUILD_MEMBERS",
-      "GUILD_BANS",
-      "GUILD_EMOJIS_AND_STICKERS",
-      "GUILD_INTEGRATIONS",
-      "GUILD_WEBHOOKS",
-      "GUILD_INVITES",
-      "GUILD_VOICE_STATES",
-      "GUILD_PRESENCES",
-      "GUILD_MESSAGES",
-      "GUILD_MESSAGE_REACTIONS",
-      "DIRECT_MESSAGES",
-      "DIRECT_MESSAGE_REACTIONS"
+      Intents.FLAGS.GUILDS,
+      Intents.FLAGS.GUILD_MESSAGES,
+      Intents.FLAGS.GUILD_VOICE_STATES,
+      Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
+      Intents.FLAGS.GUILD_MEMBERS,
+      Intents.FLAGS.GUILD_PRESENCES
     ]
   })
 
-client.manager = new Manager({
-  nodes: [{
-    retryDelay: 5000,
-      host: config.lavalink.host,
-      port: parseInt(config.lavalink.port),
-      password: config.lavalink.password,
-  }, ],
-  plugins: [
-    new filter(),
-    new Spotify({
-      clientID: config.spotify.clientID,
-      clientSecret: config.spotify.clientSecret
-    }),
-    new Apple(),
-    new Facebook(),
-  ],
-  send(id, payload) {
-      const guild = client.guilds.cache.get(id);
-      if (guild) guild.shard.send(payload);
+
+const nodes = [
+  {
+    name: config.lavalink.name,
+    host: config.lavalink.host,
+    port: config.lavalink.port,
+    password: config.lavalink.password,
   },
-})
+];
+
+const PoruOptions = {
+  library: "discord.js",
+  defaultPlatform: "ytmsearch",
+};
+
+client.manager = new Poru(client, nodes, PoruOptions)
+
 .on("nodeConnect", async(node) => {
-console.log(`Connected to ${node.options.identifier}.`)
+  console.log(`Connected to ${node.name}.`)
 })
+
 .on("nodeError", async(node, error) => {
-console.log(`Error in Connecting to ${node.options.identifier}\nError:` + error)
+  console.log(`Error in Connecting to ${node.name}\n` + error)
 })
+
 .on("trackStart", (player, track) => {
-    client.channels.cache
-        .get(player.textChannel)
-        .send(`🎶 Now playing: ${track.title}`);
+  client.channels.cache
+    .get(player.textChannel)
+    .send(`🎶 Now playing: ${track.info.title}`);
 })
+
 .on("queueEnd", (player) => {
-    client.channels.cache
-        .get(player.textChannel)
-        .send("Queue is over");
+  client.channels.cache
+    .get(player.textChannel)
+    .send("Queue is over");
 
-    player.destroy();
+  player.destroy();
 });
-
-client.on('raw', async(d) => {
-    client.manager.updateVoiceState(d);
-})
 
 client.on('ready', async() => {
   console.log(`${client.user.tag} is Ready`)
-  client.manager.init(client.user.id)
+  client.manager.init(client)
 })
 
 client.on('messageCreate', async(message) => {

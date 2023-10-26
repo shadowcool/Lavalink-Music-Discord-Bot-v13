@@ -1,11 +1,25 @@
 {
+  "name": "lavalink-music-discord-bot-v13",
+  "description": "A Discord bot with Music through Lavalink.",
+  "version": "2.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lavalink": "cd server && java -jar Lavalink.jar",
+    "bot": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shadowcool/Lavalink-Music-Discord-Bot-v13.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/shadowcool/Lavalink-Music-Discord-Bot-v13/issues"
+  },
+  "homepage": "https://github.com/shadowcool/Lavalink-Music-Discord-Bot-v13#readme",
   "dependencies": {
     "discord.js": "^13.1.0",
-    "erela.js": "^2.3.3",
-    "erela.js-apple": "^1.2.6",
-    "erela.js-facebook": "^1.0.4",
-    "erela.js-filters": "^1.2.6",
-    "erela.js-spotify": "^1.2.0",
-    "fs": "^0.0.1-security"
+    "poru": "^4.2.2"
   }
 }

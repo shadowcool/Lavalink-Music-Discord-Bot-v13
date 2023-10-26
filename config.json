@@ -1,15 +1,12 @@
 {
     "lavalink": {
-        "host": "lavalink.eu",
-        "port": "2333",
-        "password": "Raccoon"        
+        "name": "Lavalink Server",
+        "host": "localhost",
+        "port": 2333,
+        "password": "testserver"        
     },
     "discordBot": {
-        "token": "YOUR_TOKEN",
+        "token": "YOUR_DISCORD_BOT_TOKEN",
         "prefix": "?"
-    },
-    "spotify": {
-        "clientID": "SPOTIFY_CLIENT_ID",
-        "clientSecret": "SPOTIFY_CLIENT_SECRET"
     }
 }
